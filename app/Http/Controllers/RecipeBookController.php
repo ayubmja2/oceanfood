@@ -8,20 +8,32 @@ use Illuminate\Support\Facades\Auth;
 
 class RecipeBookController extends Controller
 {
-    public function bookmark($id){
+//    public function bookmark($id){
+//        $recipe = Recipe::findOrFail($id);
+//        Auth::user()->bookmarkedRecipes()->attach($recipe);
+//
+//        return redirect()->back()-with('success', 'Recipe bookmarked successfully!');
+//    }
+//
+//    public function unbookmark($id){
+//        $recipe = Recipe::findOrFail($id);
+//        Auth::user()->bookmarkedRecipes()->detach($recipe);
+//
+//        return redirect()->back()->with('success', 'Recipe bookmarked successfully!');
+//    }
+
+    public function toggleBookmark(Request $request, $id){
         $recipe = Recipe::findOrFail($id);
-        Auth::user()->bookmarkedRecipes()->attach($recipe);
+        $user = Auth::user();
 
-        return redirect()->back()-with('success', 'Recipe bookmarked successfully!');
+        if($user->bookmarkedRecipes()->where('recipe_id',$id)->exists()){
+            $user->bookmarkedRecipes()->detach($recipe);
+            return response()->json(['bookkmark' => false]);
+        }else {
+            $user->bookmarkedRecipes()->attach($recipe);
+            return response()->json(['bookkmark' => true]);
+        }
     }
-
-    public function unbookmark($id){
-        $recipe = Recipe::findOrFail($id);
-        Auth::user()->bookmarkedRecipes()->detach($recipe);
-
-        return redirect()->back()->with('success', 'Recipe bookmarked successfully!');
-    }
-
 
 
     /**

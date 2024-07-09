@@ -32,9 +32,8 @@ Route::middleware('auth')->group(function () {
 //    recipe book route
     Route::get('/recipebook', [RecipeBookController::class, 'index'])->name('recipebook');
 
-//    bookmarking and unbookmarking route
-    Route::post('/recipes/{id}/bookmark',[RecipeBookController::class, 'bookmark'])->name('recipes.bookmark');
-    Route::delete('/recipes/{id}/unbookmark',[RecipeBookController::class, 'unbookmark'])->name('recipes.unbookmark');
+//    bookmarking route
+    Route::post('/recipes/{id}/toggle-bookmark',[RecipeBookController::class, 'toggleBookmark'])->name('recipes.toggleBookmark');
 });
 
 require __DIR__.'/auth.php';
