@@ -2,10 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Recipe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RecipeBookController extends Controller
 {
+    public function bookmark($id){
+        $recipe = Recipe::findOrFail($id);
+        Auth::user()->bookmarkedRecipes()->attach($recipe);
+
+        return redirect()->back()-with('success', 'Recipe bookmarked successfully!');
+    }
+
+    public function unbookmark($id){
+        $recipe = Recipe::findOrFail($id);
+        Auth::user()->bookmarkedRecipes()->detach($recipe);
+
+        return redirect()->back()->with('success', 'Recipe bookmarked successfully!');
+    }
+
+
+
     /**
      * Display a listing of the resource.
      */

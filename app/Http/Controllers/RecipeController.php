@@ -12,10 +12,8 @@ class RecipeController extends Controller
      */
     public function index()
     {
-//        $recipe = Recipe::all();
-//        return view('recipe.index', compact('recipe'));
-
-        return view('recipe.index');
+      $recipes = Recipe::all();
+      return view('home.index', compact('recipes'));
     }
 
     /**
@@ -38,20 +36,20 @@ class RecipeController extends Controller
             'disease_name' => 'required|string',
         ]);
         $request->user()->recipes()->create([
-            'title' => $request->name,
+            'title' => $request->title,
             'instruction' => $request->instruction,
             'ingredients' => $request->ingredients,
             'disease_name' => $request->disease_name
         ]);
-        return redirect()->route('home.index');
+        return redirect()->route('home');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Recipe $recipe)
     {
-        //
+        return view('recipe.show', compact('recipe'));
     }
 
     /**

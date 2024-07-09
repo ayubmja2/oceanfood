@@ -9,14 +9,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/home', function () {
-    return view('home.index');
-})->middleware(['auth', 'verified'])->name('home');
+//Route::get('/home', function () {
+//    return view('home.index');
+//})->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+//    Home Route
+    Route::get('/home', [RecipeController::class, 'index'])->name('home');
+//    Post route
+    Route::get('/post', function(){
+        return view('post.index');
+    })->name('post');
 
 //    recipe route
     Route::get('/recipe', [RecipeController::class, 'index'])->name('recipe');
@@ -24,6 +31,10 @@ Route::middleware('auth')->group(function () {
 
 //    recipe book route
     Route::get('/recipebook', [RecipeBookController::class, 'index'])->name('recipebook');
+
+//    bookmarking and unbookmarking route
+    Route::post('/recipes/{id}/bookmark',[RecipeBookController::class, 'bookmark'])->name('recipes.bookmark');
+    Route::delete('/recipes/{id}/unbookmark',[RecipeBookController::class, 'unbookmark'])->name('recipes.unbookmark');
 });
 
 require __DIR__.'/auth.php';
