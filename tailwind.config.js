@@ -12,8 +12,15 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Roboto', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                'jungleGreen' : '#06A77D',
+                'indigoDye' : '#005377',
+                'berkeleyBlue': '#052F5F',
+                'gamboge':'#F1A208',
+                'citron': '#D5C67A'
+            }
         },
     },
 
