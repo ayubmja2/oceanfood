@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
 
 //    bookmarking route
     Route::post('/recipes/{id}/toggle-bookmark',[RecipeBookController::class, 'toggleBookmark'])->name('recipes.toggleBookmark');
+
 });
 
 require __DIR__.'/auth.php';

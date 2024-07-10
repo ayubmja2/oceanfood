@@ -1,10 +1,17 @@
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 text-center">
-                    <h1>This is going to be the feed where the recipes that are posted gets posted</h1>
+            <div class="overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="space-y-10">
+                    <section class="pt-10">
+                        <div class="grid lg:grid-cols-3 gap-8 mt-6">
+                            @foreach($bookmarkedRecipes as $recipe)
+                                <x-recipe-card :$recipe/>
+                            @endforeach
+                        </div>
+                    </section>
                 </div>
+
             </div>
         </div>
     </div>

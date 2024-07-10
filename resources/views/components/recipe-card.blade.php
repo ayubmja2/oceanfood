@@ -1,5 +1,5 @@
 @props(['recipe'])
-<x-panel class="flex flex-col text-center">
+<x-panel class="flex flex-col text-center mb-4">
     <div class="self-start text-sm">{{$recipe->disease_name}}</div>
     <div class="self-start text-sm mt-4">{{$recipe->user->name}}</div>
     <div class="py-8">
