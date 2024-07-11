@@ -15,10 +15,13 @@ class RecipeBookController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $bookmarkedRecipes = $user->bookmarkedRecipes()->with('user')->get();
         $categories = $user->categories;
-        $uncategorizedRecipes = $user->bookmarkedRecipes()->whereDoesntHave('categories')->get();
-        return view('recipeBook.index', compact('bookmarkedRecipes', 'categories', 'uncategorizedRecipes'));
+        $bookmarkedRecipes = $user->bookmarkedRecipes()->with('user')->get();
+
+        $uncategorizedRecipes = $user->bookmarkedRecipes()->whereDoesntHave('categories', function ($query) use ($user) {
+            $query->where('category_recipe.user_id', $user->id);
+        })->get();
+        return view('recipeBook.index', compact('categories','bookmarkedRecipes', 'uncategorizedRecipes'));
     }
 
     /**
@@ -96,9 +99,10 @@ class RecipeBookController extends Controller
     }
 
     public function assignRecipe(Request $request, Category $category){
-        $request = Recipe::findOrFail($request->recipe_id);
-        $category->recipes()->attach($request);
+       $recipe = Recipe::findOrFail($request->recipe_id);
 
+       //use attach method with additional data
+        $category->recipes()->attach($recipe->id, ['user_id' => Auth::id()]);
         return response()->json(['status' => 'success']);
     }
 

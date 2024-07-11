@@ -16,6 +16,6 @@ class Category extends Model
     }
 
     public function recipes(){
-        return $this->belongsToMany(Recipe::class, 'category_recipe')->withTimestamps();
+        return $this->belongsToMany(Recipe::class, 'category_recipe')->withPivot('user_id')->withTimestamps();
     }
 }

@@ -2,14 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <div class="flex justify-end">
-                    <form action="{{ route('recipebook.storeCategory') }}" method="POST">
-                        @csrf
-                        <input type="text" name="title" placeholder="New Category" required>
-                        <button type="submit">Add Category</button>
-                    </form>
-                </div>
-                <h3 class="mt-6 mb-6 text-center">Categories</h3>
+                <h3>Categories</h3>
                 <ul id="categories">
                     @foreach($categories as $category)
                         <li class="category" data-category-id="{{ $category->id }}" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
@@ -17,21 +10,26 @@
                         </li>
                     @endforeach
                 </ul>
+
+                <form action="{{ route('recipebook.storeCategory') }}" method="POST">
+                    @csrf
+                    <input type="text" name="title" placeholder="New Category" required>
+                    <button type="submit">Add Category</button>
+                </form>
             </div>
 
-            <div class="col-md-8 text-center">
+            <div class="col-md-8">
                 <h3>Uncategorized Recipes</h3>
-                <ul class="mt-6" id="uncategorized-recipes" style="list-style: none; padding: 0;">
+                <ul id="uncategorized-recipes" style="list-style: none; padding: 0;">
                     @foreach($uncategorizedRecipes as $recipe)
                         <li class="recipe" data-recipe-id="{{ $recipe->id }}" draggable="true" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-{{--                            <x-panel class="flex flex-col text-center">--}}
-{{--                                <div class="self-start text-sm">{{$recipe->disease_name}}</div>--}}
-{{--                                <div class="self-start text-sm mt-4">{{$recipe->user->name}}</div>--}}
-{{--                                <div class="py-8">--}}
-{{--                                    <h3 class="group-hover:text-gamboge text-xl font-bold transition-colors duration-300">{{ $recipe->title }}</h3>--}}
-{{--                                </div>--}}
-{{--                            </x-panel>--}}
-                            <x-recipe-card :$recipe />
+                            <x-panel class="flex flex-col text-center">
+                                <div class="self-start text-sm">{{$recipe->disease_name}}</div>
+                                <div class="self-start text-sm mt-4">{{$recipe->user->name}}</div>
+                                <div class="py-8">
+                                    <h3 class="group-hover:text-gamboge text-xl font-bold transition-colors duration-300">{{ $recipe->title }}</h3>
+                                </div>
+                            </x-panel>
                         </li>
                     @endforeach
                 </ul>
