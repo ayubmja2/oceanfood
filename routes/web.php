@@ -1,5 +1,6 @@
 <?php
 
+    use App\Http\Controllers\CategoryController;
     use App\Http\Controllers\RecipeController;
     use App\Http\Controllers\ProfileController;
     use App\Http\Controllers\RecipeBookController;
@@ -32,10 +33,16 @@ Route::middleware('auth')->group(function () {
 
 
 //    recipe book route
-    Route::get('/recipebook', [RecipeBookController::class, 'index'])->name('recipebook');
+    Route::get('/recipebook', [RecipeBookController::class, 'index'])->name('recipebook.index');
     Route::get('/recipebook/{id}', [RecipeBookController::class, 'show'])->name('recipebook.show');
+    Route::post('/recipebook/category', [RecipeBookController::class, 'storeCategory'])->name('recipebook.storeCategory');
+    Route::post('/categories/{category}/assign-recipe', [RecipeBookController::class, 'assignRecipe']);
+
+
+
 //    bookmarking route
     Route::post('/recipes/{id}/toggle-bookmark',[RecipeBookController::class, 'toggleBookmark'])->name('recipes.toggleBookmark');
+
 
 });
 

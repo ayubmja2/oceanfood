@@ -15,6 +15,10 @@ class Recipe extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function categories(){
+        return $this->belongsToMany(Category::class, 'category_recipe')->withTimestamps();
+    }
+
     public function bookmarkedByUsers(){
         return $this->belongsToMany(User::class, 'recipe_user', 'recipe_id', 'user_id')->withTimestamps();
     }

@@ -2,40 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RecipeBookController extends Controller
 {
-//    public function bookmark($id){
-//        $recipe = Recipe::findOrFail($id);
-//        Auth::user()->bookmarkedRecipes()->attach($recipe);
-//
-//        return redirect()->back()-with('success', 'Recipe bookmarked successfully!');
-//    }
-//
-//    public function unbookmark($id){
-//        $recipe = Recipe::findOrFail($id);
-//        Auth::user()->bookmarkedRecipes()->detach($recipe);
-//
-//        return redirect()->back()->with('success', 'Recipe bookmarked successfully!');
-//    }
-
-    public function toggleBookmark(Request $request, $id){
-        $recipe = Recipe::findOrFail($id);
-        $user = Auth::user();
-
-        if($user->bookmarkedRecipes()->where('recipe_id',$id)->exists()){
-            $user->bookmarkedRecipes()->detach($recipe);
-            return response()->json(['bookmark' => false]);
-        }else {
-            $user->bookmarkedRecipes()->attach($recipe);
-            return response()->json(['bookmark' => true]);
-        }
-    }
-
-
     /**
      * Display a listing of the resource.
      */
@@ -43,7 +16,9 @@ class RecipeBookController extends Controller
     {
         $user = Auth::user();
         $bookmarkedRecipes = $user->bookmarkedRecipes()->with('user')->get();
-        return view('recipeBook.index', compact('bookmarkedRecipes'));
+        $categories = $user->categories;
+        $uncategorizedRecipes = $user->bookmarkedRecipes()->whereDoesntHave('categories')->get();
+        return view('recipeBook.index', compact('bookmarkedRecipes', 'categories', 'uncategorizedRecipes'));
     }
 
     /**
@@ -94,4 +69,37 @@ class RecipeBookController extends Controller
     {
         //
     }
+
+    public function toggleBookmark(Request $request, $id){
+        $recipe = Recipe::findOrFail($id);
+        $user = Auth::user();
+
+        if($user->bookmarkedRecipes()->where('recipe_id',$id)->exists()){
+            $user->bookmarkedRecipes()->detach($recipe);
+            return response()->json(['bookmark' => false]);
+        }else {
+            $user->bookmarkedRecipes()->attach($recipe);
+            return response()->json(['bookmark' => true]);
+        }
+    }
+    public function storeCategory(Request $request){
+        $request->validate([
+            'title' => 'required|string',
+        ]);
+
+        $category = new Category();
+        $category->title = $request->title;
+        $category->user_id = Auth::id();
+        $category->save();
+
+        return redirect()->route('recipebook.index');
+    }
+
+    public function assignRecipe(Request $request, Category $category){
+        $request = Recipe::findOrFail($request->recipe_id);
+        $category->recipes()->attach($request);
+
+        return response()->json(['status' => 'success']);
+    }
+
 }

@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('recipebook')" :active="request()->routeIs('recipebook')">
+                    <x-nav-link :href="route('recipebook.index')" :active="request()->routeIs('recipebook.index')">
                         {{ __('Recipe Book') }}
                     </x-nav-link>
                 </div>
