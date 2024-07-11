@@ -65,9 +65,10 @@ class RecipeBookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $recipebook = Recipe::with('user')->findOrFail($id);
+        return view('recipeBook.show', compact('recipebook'));
     }
 
     /**

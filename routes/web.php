@@ -26,12 +26,14 @@ Route::middleware('auth')->group(function () {
     })->name('post');
 
 //    recipe route
+    Route::get('/recipe/{id}', [RecipeController::class, 'show'])->name('recipe.show');
     Route::get('/recipe', [RecipeController::class, 'index'])->name('recipe');
     Route::post('/recipe', [RecipeController::class, 'store'])->name('recipe.store');
 
+
 //    recipe book route
     Route::get('/recipebook', [RecipeBookController::class, 'index'])->name('recipebook');
-
+    Route::get('/recipebook/{id}', [RecipeBookController::class, 'show'])->name('recipebook.show');
 //    bookmarking route
     Route::post('/recipes/{id}/toggle-bookmark',[RecipeBookController::class, 'toggleBookmark'])->name('recipes.toggleBookmark');
 

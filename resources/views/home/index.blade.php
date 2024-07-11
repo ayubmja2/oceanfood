@@ -10,7 +10,9 @@
             <div class="overflow-hidden shadow-sm sm:rounded-lg ">
                 <div class="p-6 text-gray-900 text-center mt-4">
                     @foreach($recipes as $recipe)
-                        <x-recipe-card :$recipe/>
+                        <a href="{{route('recipe.show', $recipe)}}">
+                            <x-recipe-card :$recipe/>
+                        </a>
                     @endforeach
                 </div>
             </div>

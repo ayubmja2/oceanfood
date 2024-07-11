@@ -6,7 +6,9 @@
                     <section class="pt-10">
                         <div class="grid lg:grid-cols-3 gap-8 mt-6">
                             @foreach($bookmarkedRecipes as $recipe)
-                                <x-recipe-card :$recipe/>
+                                <a href="{{route('recipebook.show', $recipe)}}">
+                                    <x-recipe-card :$recipe/>
+                                </a>
                             @endforeach
                         </div>
                     </section>

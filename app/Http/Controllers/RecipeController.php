@@ -47,8 +47,10 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Recipe $recipe)
+    public function show($recipe)
     {
+        $recipe = Recipe::with('user')->findOrFail($recipe);
+//        dd($recipe);
         return view('recipe.show', compact('recipe'));
     }
 
