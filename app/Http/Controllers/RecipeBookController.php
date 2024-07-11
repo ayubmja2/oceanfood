@@ -21,7 +21,7 @@ class RecipeBookController extends Controller
         $uncategorizedRecipes = $user->bookmarkedRecipes()->whereDoesntHave('categories', function ($query) use ($user) {
             $query->where('category_recipe.user_id', $user->id);
         })->get();
-        return view('recipeBook.index', compact('categories','bookmarkedRecipes', 'uncategorizedRecipes'));
+        return view('recipebook.index', compact('categories','bookmarkedRecipes', 'uncategorizedRecipes'));
     }
 
     /**
@@ -46,7 +46,7 @@ class RecipeBookController extends Controller
     public function show($id)
     {
         $recipebook = Recipe::with('user')->findOrFail($id);
-        return view('recipeBook.show', compact('recipebook'));
+        return view('recipebook.show', compact('recipebook'));
     }
 
     /**
