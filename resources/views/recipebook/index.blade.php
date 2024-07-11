@@ -1,54 +1,37 @@
-{{--<x-app-layout>--}}
-{{--    <div class="py-12">--}}
-{{--        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">--}}
-{{--            <div class="overflow-hidden shadow-sm sm:rounded-lg">--}}
-{{--                <div class="space-y-10">--}}
-{{--                    <section class="pt-10">--}}
-{{--                        <div class="grid lg:grid-cols-3 gap-8 mt-6">--}}
-{{--                            @foreach($bookmarkedRecipes as $recipe)--}}
-{{--                                <a href="{{route('recipebook.show', $recipe)}}">--}}
-{{--                                    <x-recipe-card :$recipe/>--}}
-{{--                                </a>--}}
-{{--                            @endforeach--}}
-{{--                        </div>--}}
-{{--                    </section>--}}
-{{--                </div>--}}
-
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--</x-app-layout>--}}
-
 <x-app-layout>
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <h3>Categories</h3>
+                <div class="flex justify-end">
+                    <form action="{{ route('recipebook.storeCategory') }}" method="POST">
+                        @csrf
+                        <input type="text" name="title" placeholder="New Category" required>
+                        <button type="submit">Add Category</button>
+                    </form>
+                </div>
+                <h3 class="mt-6 mb-6 text-center">Categories</h3>
                 <ul id="categories">
                     @foreach($categories as $category)
-                        <li class="category" data-category-id="{{$category->id}}">{{$category->title}}</li>
+                        <li class="category" data-category-id="{{ $category->id }}" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                            {{ $category->title }}
+                        </li>
                     @endforeach
                 </ul>
-
-                <form action="{{route('recipebook.storeCategory')}}" method="POST">
-                    @csrf
-                    <input type="text" name="title" placeholder="New Category" required/>
-                    <button type="submit">Add Category</button>
-                </form>
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-8 text-center">
                 <h3>Uncategorized Recipes</h3>
-                <ul id="uncategorized-recipes">
+                <ul class="mt-6" id="uncategorized-recipes" style="list-style: none; padding: 0;">
                     @foreach($uncategorizedRecipes as $recipe)
-                        <li class="recipe" data-recipe-id="{{$recipe->id}}" draggable="true">
-                            <x-panel class="flex flex-col text-center">
-                                <div class="self-start text-sm">{{$recipe->disease_name}}</div>
-                                <div class="self-start text-sm mt-4">{{$recipe->user->name}}</div>
-                                <div class="py-8">
-                                    <h3 class="group-hover:text-gamboge text-xl font-bold transition-colors duration-300">{{$recipe->title}}</h3>
-                                </div>
-                            </x-panel>
+                        <li class="recipe" data-recipe-id="{{ $recipe->id }}" draggable="true" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+{{--                            <x-panel class="flex flex-col text-center">--}}
+{{--                                <div class="self-start text-sm">{{$recipe->disease_name}}</div>--}}
+{{--                                <div class="self-start text-sm mt-4">{{$recipe->user->name}}</div>--}}
+{{--                                <div class="py-8">--}}
+{{--                                    <h3 class="group-hover:text-gamboge text-xl font-bold transition-colors duration-300">{{ $recipe->title }}</h3>--}}
+{{--                                </div>--}}
+{{--                            </x-panel>--}}
+                            <x-recipe-card :$recipe />
                         </li>
                     @endforeach
                 </ul>
