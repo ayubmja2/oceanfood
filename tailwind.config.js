@@ -10,6 +10,11 @@ export default {
     ],
 
     theme: {
+        screens:{
+            'sm':'810px',
+            'md': '1080px',
+            'lg': '1280px'
+        },
         extend: {
             fontFamily: {
                 sans: ['Roboto', ...defaultTheme.fontFamily.sans],

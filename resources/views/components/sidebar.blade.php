@@ -7,7 +7,9 @@
             </div>
             <div class="grid grid-row-2 mt-4 justify-center">
                @foreach($collections as $category)
-                    <div class="bg-orange-400 mb-8 rounded-2xl  text-sm p-4 text-center">{{$category->title}}</div>
+                    <div class="bg-orange-400 mb-8 rounded-2xl  text-sm p-4 text-center">
+                        <a href="{{route('category.show',$category->id)}}">{{$category->title}}</a>
+                    </div>
                @endforeach
             </div>
         </div>

@@ -30,6 +30,13 @@ class CategoryController extends Controller
         return redirect()->route('categories.index');
     }
 
+    public function show($category){
+        $category = Category::with('user')->findOrFail($category);
+//        dd($category->title);
+
+        return view('category.show', compact('category'));
+    }
+
     public function assignRecipe(Request $request, Category $category){
         $recipe = Recipe::findOrFail($request->recipe_id);
         $category->recipes()->attach($recipe);
