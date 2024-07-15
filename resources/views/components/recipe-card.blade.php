@@ -7,8 +7,15 @@
             <div class="rounded-md max-md:block bg-orange-400 md:bg-transparent">{{$recipe->user->name}}</div>
         </div>
 
-        <div class="flex justify-center mt-8">
-            <img class="rounded-lg shadow-2xl dark:shadow-gray-800" src="https://place-hold.it/200/200" alt="">
+        <div class="mt-8 ">
+            <div class="flex justify-evenly space-x-6">
+                <div class="">
+                    <img class="rounded-lg shadow-2xl mr-10 dark:shadow-gray-800" src="https://place-hold.it/200/200" alt="">
+                </div>
+                <div class="max-sm:hidden  max-auto text-center">
+                    <h1 class="font-medium">Recipe Description</h1>
+                </div>
+            </div>
         </div>
 
         <div class="flex justify-between items-center mt-2 max-md:hidden max-md:transition duration-600 ease-in-out">
