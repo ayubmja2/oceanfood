@@ -31,9 +31,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/recipe', [RecipeController::class, 'index'])->name('recipe');
     Route::post('/recipe', [RecipeController::class, 'store'])->name('recipe.store');
 
+    //Category
 
 //    recipe book route
-    Route::get('/recipebook', [RecipeBookController::class, 'index'])->name('recipebook.index');
+    Route::get('/recipebook', [RecipeBookController::class, 'index'])->name('recipebook.index'); //
     Route::get('/recipebook/{id}', [RecipeBookController::class, 'show'])->name('recipebook.show');
     Route::post('/recipebook/category', [RecipeBookController::class, 'storeCategory'])->name('recipebook.storeCategory');
     Route::post('/categories/{category}/assign-recipe', [RecipeBookController::class, 'assignRecipe']);

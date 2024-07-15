@@ -1,21 +1,20 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+    <div class="h-screen flex">
+        <!-- Left Sidebar -->
+        <div class="bg-blue-800 w-1/4 h-screen sticky top-0">
+            <x-sidebar :$collections/>
+        </div>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="overflow-hidden shadow-sm sm:rounded-lg ">
-                <div class="p-6 text-gray-900 text-center mt-4">
-                    @foreach($recipes as $recipe)
-                        <a href="{{route('recipe.show', $recipe)}}">
-                            <x-recipe-card :$recipe/>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
+        <!-- Main Content Area -->
+        <div class="w-1/2 h-full overflow-y-auto p-2 pb-16">
+            @foreach($recipes as $recipe)
+                <x-recipe-card :$recipe />
+            @endforeach
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="bg-blue-800 w-1/4 h-screen sticky top-0">
+            <x-sidebar-right />
         </div>
     </div>
 </x-app-layout>

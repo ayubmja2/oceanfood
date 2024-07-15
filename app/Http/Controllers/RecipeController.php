@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RecipeController extends Controller
 {
@@ -13,7 +15,9 @@ class RecipeController extends Controller
     public function index()
     {
       $recipes = Recipe::all();
-      return view('home.index', compact('recipes'));
+      $user = Auth::user();
+      $collections = $user->categories;
+      return view('home.index', compact('recipes', 'collections'));
     }
 
     /**
