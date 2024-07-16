@@ -1,32 +1,40 @@
 @props(['recipe'])
 <x-panel class="flex flex-col mb-4">
     <div>
-        <div class="text-center font-medium rounded-2xl bg-orange-400 max-md:bg-transparent md:flex flex-row justify-between p-2 max-md:transition duration-300 ease-in-out shadow-2xl">
+        <div class="text-center font-medium rounded-2xl bg-orange-400 max-md:bg-transparent md:flex flex-row justify-between p-2 max-md:transition duration-300 ease-in-out shadow-2xl dark:shadow-orange-300">
             <div class="rounded-md max-md:block bg-orange-400 md:bg-transparent">{{$recipe->disease_name}}</div>
             <h3 class="rounded-md max-md:my-2 max-md:block bg-orange-400 md:transition-colors group-hover:text-gamboge transition-colors duration-300" >{{$recipe->title}}</h3>
             <div class="rounded-md max-md:block bg-orange-400 md:bg-transparent">{{$recipe->user->name}}</div>
         </div>
 
         <div class="mt-8 ">
-            <div class="flex max-md:flex-col-reverse max-md:justify-items-center justify-evenly space-x-6">
-                <div class="max-md:mt-4">
-                    <img class="rounded-lg shadow-2xl mr-10 dark:shadow-gray-800" src="https://place-hold.it/200/200" alt="">
-                </div>
-
-                <div class="flex flex-col  flex-wrap max-sm:hidden max-auto text-center p-6 bg-white/20 rounded-xl">
-                    <h1 class="font-medium">Recipe Description</h1>
-                    <div class="flex">
-                        <p class="sm:text-sm overflow-hidden text-ellipsis break-words max-h-32 line-clamp-2 text-balance">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                        </p>
+            <div class="flex max-md:flex-col-reverse max-md:justify-items-center justify-evenly  md:space-x-6">
+                <div class="max-md:mt-4 max-md:mx-auto">
+                    <div class="text-center">
+                        <img class="rounded-lg shadow-2xl dark:shadow-orange-500 mb-4" src="https://place-hold.it/200/200" alt="">
+                        <a href="{{route('recipe.show',$recipe->id)}}" class="bg-orange-400 p-2 font-medium rounded-full">Info</a>
                     </div>
                 </div>
+
+                <x-panel class="flex flex-col flex-wrap max-sm:hidden max-auto text-center">
+                   <div class="">
+                       <h1 class="font-medium">{{$recipe->title}}</h1>
+                   </div>
+
+                    <div class="sm:text-sm overflow-hidden text-ellipsis break-words line-clamp-2 text-balance">
+                        <p class="w-full">
+                            {{$recipe->ingredients}}
+                        </p>
+                    </div>
+                </x-panel>
 
             </div>
         </div>
 
         <div class="flex justify-between items-center mt-2 max-md:hidden max-md:transition duration-600 ease-in-out">
-            <div></div>
+            <div>
+
+            </div>
             <div>
                 @auth
                     <button class="bookmark-btn" data-recipe-id="{{ $recipe->id }}">

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container mx-auto m-4 px-4">
+    <div class="container mx-auto m-4 px-4 overflow-y-auto">
         <x-panel class="m-4">
             <div class="flex flex-col">
                 <div class="text-center">
@@ -41,9 +41,9 @@
                     </div>
 
                     <div>
-                        <ul id="uncategorized-recipes" class="flex flex-wrap justify-evenly space-x-1">
+                        <ul id="uncategorized-recipes" class="flex flex-wrap justify-evenly">
                             @foreach($uncategorizedRecipes as $recipe)
-                                <li class="recipe" style="flex: calc(33.333% - 1em)" data-recipe-id="{{$recipe->id }}" draggable="true">
+                                <li class="recipe" style="flex: 0 calc(23% + 1em)" data-recipe-id="{{$recipe->id }}" draggable="true">
                                     <x-recipe-card :$recipe/>
                                 </li>
                             @endforeach
