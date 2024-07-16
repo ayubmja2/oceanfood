@@ -1,66 +1,83 @@
 <x-app-layout>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <h3>Categories</h3>
-                <ul id="categories">
-                    @foreach($categories as $category)
-                        <li class="category" data-category-id="{{ $category->id }}" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                            {{ $category->title }}
-                        </li>
-                    @endforeach
-                </ul>
-
-                <form action="{{ route('recipebook.storeCategory') }}" method="POST">
-                    @csrf
-                    <input type="text" name="title" placeholder="New Category" required>
-                    <button type="submit">Add Category</button>
-                </form>
+    <div class="container mx-auto m-4 px-4">
+        <x-panel class="m-4">
+            <div class="flex flex-col">
+                <div class="text-center">
+                    <form action="{{route('recipebook.storeCategory')}}" method="POST">
+                        @csrf
+                        <input class="rounded-2xl opacity-50" type="text" name="title" placeholder="New Collection"
+                               required>
+                        <button
+                            class="bg-orange-400 max-sm:mt-2 md:ml-4 rounded-2xl p-2 px-4 shadow dark:shadow-amber-500"
+                            type="submit">New Collection
+                        </button>
+                    </form>
+                </div>
             </div>
+        </x-panel>
 
-            <div class="col-md-8">
-                <h3>Uncategorized Recipes</h3>
-                <ul id="uncategorized-recipes" style="list-style: none; padding: 0;">
-                    @foreach($uncategorizedRecipes as $recipe)
-                        <li class="recipe" data-recipe-id="{{ $recipe->id }}" draggable="true" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                            <x-panel class="flex flex-col text-center">
-                                <div class="self-start text-sm">{{$recipe->disease_name}}</div>
-                                <div class="self-start text-sm mt-4">{{$recipe->user->name}}</div>
-                                <div class="py-8">
-                                    <h3 class="group-hover:text-gamboge text-xl font-bold transition-colors duration-300">{{ $recipe->title }}</h3>
-                                </div>
-                            </x-panel>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+        <div class="grid grid-cols-2 m-4 gap-2">
+            <x-panel>
+                <div class="flex flex-col space-y-2 text-center">
+                    <div>
+                        <h1>New Collections</h1>
+                    </div>
+                    <div class="flex flex-wrap justify-evenly max-sm:flex-col text-center">
+                        @foreach($categories as $category)
+                            <ul id="categories">
+                                <li class="category bg-yellow-500 mb-2 font-medium p-3 rounded-2xl shadow dark:shadow-yellow-500"
+                                    data-category-id="{{$category->id}}">
+                                    <a href="{{route('category.show',$category->id)}}">{{$category->title}}</a>
+                                </li>
+                            </ul>
+                        @endforeach
+                    </div>
+                </div>
+            </x-panel>
+            <x-panel>
+                <div class="flex flex-col space-y-2 text-center">
+                    <div>
+                        <h1>New BookMarks</h1>
+                    </div>
+
+                    <div>
+                        <ul id="uncategorized-recipes" class="flex flex-wrap justify-evenly space-x-1">
+                            @foreach($uncategorizedRecipes as $recipe)
+                                <li class="recipe" style="flex: calc(33.333% - 1em)" data-recipe-id="{{$recipe->id }}" draggable="true">
+                                    <x-recipe-card :$recipe/>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                </div>
+            </x-panel>
         </div>
     </div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const categories = document.querySelectorAll('.category');
             const recipes = document.querySelectorAll('.recipe');
 
             recipes.forEach(recipe => {
-                recipe.addEventListener('dragstart', function(e) {
+                recipe.addEventListener('dragstart', function (e) {
                     console.log('Drag Start:', e.target.dataset.recipeId);
                     e.dataTransfer.setData('text/plain', e.target.dataset.recipeId);
                 });
             });
 
             categories.forEach(category => {
-                category.addEventListener('dragover', function(e) {
+                category.addEventListener('dragover', function (e) {
                     e.preventDefault();
                     console.log('Drag Over Category:', e.target.dataset.categoryId);
                 });
 
-                category.addEventListener('drop', function(e) {
+                category.addEventListener('drop', function (e) {
                     e.preventDefault();
                     const recipeId = e.dataTransfer.getData('text/plain');
                     const categoryId = e.target.dataset.categoryId;
 
-                    console.log('Drop:', { recipeId, categoryId });
+                    console.log('Drop:', {recipeId, categoryId});
 
                     fetch(`/categories/${categoryId}/assign-recipe`, {
                         method: 'POST',
@@ -68,7 +85,7 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify({ recipe_id: recipeId })
+                        body: JSON.stringify({recipe_id: recipeId})
                     })
                         .then(response => response.json())
                         .then(data => {
