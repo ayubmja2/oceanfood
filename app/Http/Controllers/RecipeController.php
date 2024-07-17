@@ -18,10 +18,10 @@ class RecipeController extends Controller
      */
     public function index()
     {
-      $recipes = Recipe::all();
-      $user = Auth::user();
-      $collections = $user->categories;
-      return view('home.index', compact('recipes', 'collections'));
+        $recipes = Recipe::all();
+        $user = Auth::user();
+        $collections = $user->categories;
+        return view('home.index', compact('recipes', 'collections'));
     }
 
     /**
@@ -37,7 +37,7 @@ class RecipeController extends Controller
      */
     public function store(Request $request)
     {
-       $validated = $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
             'instruction' => 'required|string',
@@ -46,8 +46,8 @@ class RecipeController extends Controller
             'image' => 'required|image|max:10240',
         ]);
 
-       //Handle the file upload
-        if($request->hasFile('image')){
+        //Handle the file upload
+        if ($request->hasFile('image')) {
             $user = $request->user();
             $image = $request->file('image');
         }
@@ -68,7 +68,7 @@ class RecipeController extends Controller
         file_put_contents($tempPath, $encodedImage);
 
         $path = Storage::disk('spaces')->putFileAs("images/user_uploads/user_{$user->id}", new File($tempPath), $image->hashName()
-        . '.jpg', 'public');
+            . '.jpg', 'public');
 
         $imageUrl = Storage::disk('spaces')->url($path);
 
@@ -78,7 +78,7 @@ class RecipeController extends Controller
         // Ensure ingredients are stored in the ingredient table
         $ingredients = array_map('trim', explode(',', $request->input('ingredients')));
 
-        foreach($ingredients as $ingredient) {
+        foreach ($ingredients as $ingredient) {
             Ingredient::firstOrCreate(['name' => $ingredient]);
         }
 
@@ -125,4 +125,6 @@ class RecipeController extends Controller
     {
         //
     }
+
+
 }
