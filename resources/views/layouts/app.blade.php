@@ -19,12 +19,24 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="antialiased overflow-hidden bg-jungleGreen">
-       <header class="sticky top-0 z-50">
-           @include('layouts.navigation')
-       </header>
-        <main class="relative">
-            {{$slot}}
-        </main>
+    <body class="antialiased h-full bg-jungleGreen">
+{{--       <header class="sticky top-0 z-50">--}}
+{{--           @include('layouts.navigation')--}}
+{{--       </header>--}}
+{{--        <main>--}}
+{{--            {{$slot}}--}}
+{{--        </main>--}}
+
+        <div class="h-full flex flex-col">
+            <header class="sticky top-0 z-50">
+                @include('layouts.navigation')
+            </header>
+
+            <div class="flex flex-1 overflow-hidden">
+                <main class="flex-1 overflow-y-auto">
+                    {{$slot}}
+                </main>
+            </div>
+        </div>
     </body>
 </html>

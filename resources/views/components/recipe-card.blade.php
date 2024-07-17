@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <div class="flex justify-between items-center mt-2 max-md:hidden max-md:transition duration-600 ease-in-out">
+        <div class="flex justify-between items-center mt-2 max-sm:hidden max-md:transition duration-600 ease-in-out">
             <div>
 
             </div>
