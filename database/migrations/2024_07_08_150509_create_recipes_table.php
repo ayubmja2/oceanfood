@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('instruction');
-            $table->string('ingredients');
+            $table->text('description');
+            $table->text('instruction');
+            $table->json('ingredients');
             $table->string('disease_name'); //TODO:: Pivot table select option.
+            $table->string('image_url')->nullable();
             $table->timestamps();
         });
     }

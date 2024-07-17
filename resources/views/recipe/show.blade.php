@@ -15,7 +15,11 @@
                 <div>
                     <x-panel>
                         <h1>Ingredients</h1>
-                        <h2>{{$recipe->ingredients}}</h2>
+                       <ul>
+                           @foreach($recipe->ingredients as $ingredient)
+                               <li>{{$ingredient}}</li>
+                           @endforeach
+                       </ul>
                     </x-panel>
                 </div>
             </div>

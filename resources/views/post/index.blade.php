@@ -10,7 +10,7 @@
                         </div>
 
                         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                            <form class="space-y-6" action="{{route('recipe.store')}}" method="POST">
+                            <form class="space-y-6" action="{{route('recipe.store')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 {{-- Recipe Name --}}
                                 <div>
@@ -19,6 +19,15 @@
                                     </div>
                                     <div class="mt-2">
                                         <input id="title" name="title" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Rice and Chicken">
+                                    </div>
+                                </div>
+                                {{-- Description --}}
+                                <div>
+                                    <div class="flex items-center justify-between">
+                                        <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <input id="description" name="description" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Amazing food from... Just be descriptive about the dish">
                                     </div>
                                 </div>
                                 {{-- Instructions --}}
@@ -37,6 +46,15 @@
                                     </div>
                                     <div class="mt-2">
                                         <input id="ingredients" name="ingredients" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Rice, Chicken">
+                                    </div>
+                                </div>
+                                {{-- img --}}
+                                <div>
+                                    <div class="flex items-center justify-between">
+                                        <label for="image" class="block text-sm font-medium leading-6 text-gray-900">Image</label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <input id="image" name="image" type="file" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
                                 </div>
                                 {{-- Disease Name --}}

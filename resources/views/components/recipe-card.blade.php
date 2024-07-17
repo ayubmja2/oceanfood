@@ -11,7 +11,7 @@
             <div class="flex max-md:flex-col-reverse max-md:justify-items-center justify-evenly  md:space-x-6">
                 <div class="max-md:mt-4 max-md:mx-auto">
                     <div class="text-center">
-                        <img class="rounded-lg shadow-2xl dark:shadow-orange-500 mb-4" src="https://place-hold.it/200/200" alt="">
+                        <img class="rounded-lg shadow-2xl dark:shadow-orange-500 mb-4" src="{{$recipe->image_url}}" alt="">
                         <a href="{{route('recipe.show',$recipe->id)}}" class="bg-orange-400 p-2 font-medium rounded-full">Info</a>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
 
                     <div class="sm:text-sm overflow-hidden text-ellipsis break-words line-clamp-2 text-balance">
                         <p class="w-full">
-                            {{$recipe->ingredients}}
+                            {{$recipe->description}}
                         </p>
                     </div>
                 </x-panel>
