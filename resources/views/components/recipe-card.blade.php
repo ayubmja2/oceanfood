@@ -1,36 +1,29 @@
 @props(['recipe'])
-<x-panel class="flex flex-col mb-4">
-    <div>
-        <div class="text-center font-medium rounded-2xl bg-orange-400 max-md:bg-transparent md:flex flex-row justify-between p-2 max-md:transition duration-300 ease-in-out shadow-2xl dark:shadow-orange-300">
-            <div class="rounded-md max-md:block bg-orange-400 md:bg-transparent">{{$recipe->disease_name}}</div>
-            <h3 class="rounded-md max-md:my-2 max-md:block bg-orange-400 md:transition-colors group-hover:text-gamboge transition-colors duration-300" >{{$recipe->title}}</h3>
-            <div class="rounded-md max-md:block bg-orange-400 md:bg-transparent">{{$recipe->user->name}}</div>
-        </div>
-
-        <div class="mt-8 ">
-            <div class="flex max-md:flex-col-reverse max-md:justify-items-center justify-evenly  md:space-x-6">
-                <div class="max-md:mt-4 max-md:mx-auto">
-                    <div class="text-center">
-                        <img class="rounded-lg shadow-2xl dark:shadow-orange-500 mb-4" src="{{$recipe->image_url}}" alt="">
-                        <a href="{{route('recipe.show',$recipe->id)}}" class="bg-orange-400 p-2 font-medium rounded-full">Info</a>
-                    </div>
-                </div>
-
-                <x-panel class="flex flex-col flex-wrap max-sm:hidden max-auto text-center">
-                   <div class="">
-                       <h1 class="font-medium">{{$recipe->title}}</h1>
-                   </div>
-
-                    <div class="sm:text-sm overflow-hidden text-ellipsis break-words line-clamp-2 text-balance">
-                        <p class="w-full">
-                            {{$recipe->description}}
-                        </p>
-                    </div>
-                </x-panel>
-
+<div class="container mx-auto p-2">
+    <x-panel>
+        <div class="container mx-auto max-h-full">
+            <div class="text-center font-medium rounded-2xl bg-orange-400 max-md:bg-transparent md:flex flex-row justify-center max-md:transition duration-300 ease-in-out shadow-2xl dark:shadow-orange-300">
+                <h3 class="text-sm rounded-md max-md:my-2 max-md:block bg-orange-400 md:transition-colors transition-colors duration-300">{{$recipe->title}}</h3>
             </div>
         </div>
 
+        <div class="container mx-auto mt-4">
+            <div class="flex max-md:flex-col-reverse max-md:justify-items-center justify-evenly md:space-x-6">
+                <div class="max-md:mt-4 mx-auto">
+                    <div class="text-center">
+                        <div class="container">
+                            <img class="rounded-lg shadow-2xl dark:shadow-orange-500 mb-4" src="{{$recipe->image_url}}" alt="">
+                            <a href="{{route('recipe.show', $recipe->id)}}" class="bg-orange-400 p-2 font-medium rounded-full">Info</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="container flex flex-col max-sm:text-sm overflow-hidden text-ellipsis max-sm:line-clamp-1 text-center">
+                    <x-panel>
+                        <p>{{$recipe->description}}</p>
+                    </x-panel>
+                </div>
+            </div>
+        </div>
         <div class="flex justify-between items-center mt-2 max-sm:hidden max-md:transition duration-600 ease-in-out">
             <div>
 
@@ -45,21 +38,25 @@
                 @endauth
             </div>
         </div>
-    </div>
-</x-panel>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    </x-panel>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 
-<script>
-    $(document).ready(function () {
-        $('.bookmark-btn').on('click', function () {
-            var recipeId = $(this).data('recipe-id');
-            var button = $(this).find('.bookmark-icon');
-            // Toggle the icon immediately for visual feedback
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.bookmark-btn').off('click').on('click', function() {
+            let recipeId = $(this).data('recipe-id');
+            let button = $(this).find('.bookmark-icon');
+            let buttonHtml = $(this).html();
+
+
+            // Immediate visual feedback
             if (button.hasClass('far')) {
-                button.removeClass('far').addClass('fas').css('color', 'blue'); // Assume it's bookmarked
+                button.removeClass('far').addClass('fas').css('color', 'black');
             } else {
-                button.removeClass('fas').addClass('far').css('color', ''); // Assume it's unbookmarked
+                button.removeClass('fas').addClass('far').css('color', '');
             }
 
             $.ajax({
@@ -68,24 +65,28 @@
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
-                success: function (response) {
+                success: function(response) {
+
+                    // Ensure the icon state is correctly updated based on the response
                     if (response.bookmarked) {
-                        button.find('.bookmark-icon').removeClass('far').addClass('fas'); // Change to solid icon
-                        button.find('.bookmark-icon').css('color', 'blue'); // Change color to indicate bookmarked
+                        $(this).html('<i class="fas fa-bookmark bookmark-icon" style="color: black;"></i>');
                     } else {
-                        button.find('.bookmark-icon').removeClass('fas').addClass('far'); // Change to regular icon
-                        button.find('.bookmark-icon').css('color', ''); // Reset color to default
+                        $(this).html('<i class="far fa-bookmark bookmark-icon"></i>');
                     }
-                },
-                error: function (response) {
+
+                    let recipeItem = $(this).closest('.recipe');
+                    if (response.bookmarked) {
+                        $('#categorized-recipes').append(recipeItem);
+                    } else {
+                        $('#uncategorized-recipes').append(recipeItem);
+                    }
+                }.bind(this), // Bind 'this' to ensure the correct context
+
+                error: function(response) {
                     // Revert the icon state if the request fails
-                    if (button.hasClass('fas')) {
-                        button.removeClass('fas').addClass('far').css('color', '');
-                    } else {
-                        button.removeClass('far').addClass('fas').css('color', 'blue');
-                    }
-                    alert('Error toggling bookmark');
-                }
+                    $(this).html(buttonHtml);
+                    alert("Error toggling bookmark");
+                }.bind(this) // Bind 'this' to ensure the correct context
             });
         });
     });

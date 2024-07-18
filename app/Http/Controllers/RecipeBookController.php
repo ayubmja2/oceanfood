@@ -79,10 +79,10 @@ class RecipeBookController extends Controller
 
         if($user->bookmarkedRecipes()->where('recipe_id',$id)->exists()){
             $user->bookmarkedRecipes()->detach($recipe);
-            return response()->json(['bookmark' => false]);
+            return response()->json(['bookmarked' => false]);
         }else {
             $user->bookmarkedRecipes()->attach($recipe);
-            return response()->json(['bookmark' => true]);
+            return response()->json(['bookmarked' => true]);
         }
     }
     public function storeCategory(Request $request){
