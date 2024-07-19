@@ -8,6 +8,7 @@ use App\Models\Recipe;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -96,12 +97,28 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($recipe)
+    public function show($recipeId)
     {
-        $recipe = Recipe::with('user')->findOrFail($recipe);
-        return view('recipe.show', compact('recipe'));
+        $recipe = Recipe::with('user')->findOrFail($recipeId);
+        $userId = Auth::id();
+        $isInCategory = DB::table('category_recipe')->where('recipe_id', $recipeId)->where('user_id', $userId)->exists();
+
+        return view('recipe.show', compact('recipe', 'isInCategory'));
     }
 
+    public function removeFromCategory(Request $request){
+        $userId = Auth::id();
+        $recipeId = $request->input('recipe_id');
+
+        $exists = DB::table('category_recipe')->where('recipe_id',$recipeId)->where('user_id',$userId)->exists();
+
+        if($exists) {
+            DB::table('category_recipe')->where('recipe_id', $recipeId)->where('user_id', $userId)->delete();
+
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 400);
+    }
     /**
      * Show the form for editing the specified resource.
      */

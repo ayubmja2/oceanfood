@@ -33,6 +33,9 @@ Route::middleware('auth')->group(function () {
 
     //Category
     Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
+    Route::post('/category/remove-recipe', [RecipeController::class, 'removeFromCategory'])->name('category.remove-recipe');
+    Route::post('/category/delete', [CategoryController::class, 'delete'])->name('category.delete');
+    Route::post('/category/rename', [CategoryController::class, 'rename'])->name('category.rename');
 //    recipe book route
     Route::get('/recipebook', [RecipeBookController::class, 'index'])->name('recipebook.index'); //
     Route::get('/recipebook/{id}', [RecipeBookController::class, 'show'])->name('recipebook.show');
@@ -43,6 +46,7 @@ Route::middleware('auth')->group(function () {
 
 //    bookmarking route
     Route::post('/recipes/{id}/toggle-bookmark',[RecipeBookController::class, 'toggleBookmark'])->name('recipes.toggleBookmark');
+
 
 
 });

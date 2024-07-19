@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -42,5 +43,37 @@ class CategoryController extends Controller
         $category->recipes()->attach($recipe);
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function delete(Request $request){
+        $categoryId = $request->input('category_id');
+        $userId = Auth::id();
+
+        $category = Category::where('id', $categoryId)->where('user_id', $userId)->first();
+
+        if($category){
+
+            DB::table('category_recipe')->where('category_id', $categoryId)->where('user_id', $userId)->delete();
+            $category->delete();
+
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 400);
+    }
+
+    public function rename(Request $request) {
+        $categoryId = $request->input('category_id');
+        $newTitle = $request->input('title');
+        $userid = Auth::id();
+
+        $category = Category::where('id', $categoryId)->where('user_id', $userid)->first();
+
+        if($category) {
+            $category->title = $newTitle;
+            $category->save();
+
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 400);
     }
 }
