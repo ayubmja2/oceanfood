@@ -131,6 +131,29 @@ class ProfileController extends Controller
         return redirect()->back()->with('error', 'No image file found.');
     }
 
+    public function addAllergen(Request $request){
+        $request->validate(['allergen' => 'required|string']);
+
+        $user = $request->user();
+        $allergens = $user->allergens ?? [];
+        $allergens[] = $request->input('allergen');
+        $user->allergens = array_unique($allergens);
+        $user->save();
+
+        return redirect()->back();
+    }
+
+    public function removeAllergen(Request $request){
+        $request->validate(['allergen' => 'required|string']);
+
+        $user = $request->user();
+        $allergens = $user->allergens ?? [];
+        $allergens = array_diff($allergens, [$request->input('allergen')]);
+        $user->allergens = $allergens;
+        $user->save();
+
+        return redirect()->back();
+    }
     public function show() {
         $user = Auth::user();
         return view('profile.edit', compact('user'));

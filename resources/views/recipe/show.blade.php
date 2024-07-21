@@ -40,7 +40,14 @@
 
             <div class="text-center font-medium">
                 <x-panel>
-                    <h1>Allergiants</h1>
+                    <h1>Allergens</h1>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($recipe->ingredients as $ingredient)
+                            @if(in_array(strtolower($ingredient), array_map('strtolower', $userAllergens)))
+                                <span class="bg-red-500 text-white p-2 rounded">{{$ingredient}}</span>
+                            @endif
+                        @endforeach
+                    </div>
                 </x-panel>
             </div>
         </x-panel>

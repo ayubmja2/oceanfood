@@ -25,16 +25,25 @@
                         <h1>Highlight Food Allergies</h1>
                         <div class="grid grid-row-2 gap-4">
                             <div class="mt-4">
-                                <form action="#">
+                                <form action="{{route('profile.addAllergen')}}" method="POST">
                                     @csrf
-                                    <input class="rounded-3xl bg-transparent" type="text" placeholder="Type in Allegiant">
+                                    <input class="rounded-3xl bg-transparent" name="allergen" type="text" placeholder="Type in Allergen">
                                     <button class="bg-orange-400 p-2 px-6 ml-4 rounded-2xl"  type="submit">Submit</button>
                                 </form>
                             </div>
                             <div>
                                 <h1>Where Allergies are listed below:</h1>
-                                <div class="flex flex-row text-sm mt-4 border border-orange-400 p-2">
-                                    alksdfjj
+                                <div class="flex flex-wrap text-sm mt-4 border border-orange-400 p-2 gap-2">
+                                    @foreach($user->allergens ?? [] as $allergen)
+                                       <div class="relative p-2 bg-orange-400 rounded-lg flex items-center justify-between w-full md:w-auto">
+                                           <h1>{{$allergen}}</h1>
+                                           <form action="{{route('profile.removeAllergen')}}" method="POST" class="absolute top-0 right-0">
+                                               @csrf
+                                               <input type="hidden" name="allergen" value="{{$allergen}}">
+                                               <button type="submit" class="text-red-500">&times;</button>
+                                           </form>
+                                       </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

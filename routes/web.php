@@ -17,11 +17,14 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/upload', [ProfileController::class, 'uploadProfileImage'])->name('profile.upload');
+    Route::post('/profile/add-allergen', [ProfileController::class, 'addAllergen'])->name('profile.addAllergen');
+    Route::post('/profile/remove-allergen', [ProfileController::class, 'removeAllergen'])->name('profile.removeAllergen');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 //    Home Route
     Route::get('/home', [RecipeController::class, 'index'])->name('home');
+
 //    Post route
     Route::get('/post', function(){
         return view('post.index');
@@ -32,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/recipe', [RecipeController::class, 'index'])->name('recipe');
     Route::post('/recipe', [RecipeController::class, 'store'])->name('recipe.store');
     Route::get('/recipe/latest', [RecipeController::class, 'latest'])->name('recipe.latest');
-
+    Route::get('/recipes/search', [RecipeController::class, 'search'])->name('recipe.search');
 
     //Category
     Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');

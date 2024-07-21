@@ -114,7 +114,10 @@ class RecipeController extends Controller
         $userId = Auth::id();
         $isInCategory = DB::table('category_recipe')->where('recipe_id', $recipeId)->where('user_id', $userId)->exists();
 
-        return view('recipe.show', compact('recipe', 'isInCategory'));
+        $user = Auth::user();
+        $userAllergens = $user->allergens ?? [];
+//        dd($userAllergens);
+        return view('recipe.show', compact('recipe', 'isInCategory', 'userAllergens'));
     }
 
     public function removeFromCategory(Request $request){
@@ -151,6 +154,27 @@ class RecipeController extends Controller
             ]);
         }
         return response()->json(['new_recipes' => false]);
+    }
+
+    public function search(Request $request){
+
+        $keyword = $request->input('keyword');
+
+        $recipes = Recipe::when($keyword, function ($query, $keyword) {
+            return $query->where('title', 'LIKE', '%' . $keyword . '%');
+        })->get();
+
+        if($recipes->isEmpty()){
+            return response()->json(['error' => 'No recipes found.'], 404);
+        }
+
+        $html = '';
+
+        foreach($recipes as $recipe){
+            $html .= view('components.recipe-card',compact('recipe'))->render();
+        }
+
+        return response()->json(['html' => $html], 200);
     }
     /**
      * Show the form for editing the specified resource.
