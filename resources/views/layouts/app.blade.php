@@ -13,11 +13,12 @@
         <link
             href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
             rel="stylesheet">
-
-        <script src="https://kit.fontawesome.com/285676dd7f.js" crossorigin="anonymous"></script>
-
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/285676dd7f.js" crossorigin="anonymous"></script>
+
+
     </head>
     <body class="antialiased h-full bg-jungleGreen">
 {{--       <header class="sticky top-0 z-50">--}}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RecipeCreated;
 use App\Models\Category;
 use App\Models\Ingredient;
 use App\Models\Recipe;
@@ -19,12 +20,19 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        $recipes = Recipe::all();
+        $recipes = Recipe::orderBy('created_at', 'desc')->get();
         $user = Auth::user();
         $collections = $user->categories;
         return view('home.index', compact('recipes', 'collections'));
     }
 
+    public function latest() {
+        $recipes = Recipe::latest()->take(10)->get();
+        $recipes->each(function ($recipe){
+            $recipe->component_html = view('components.recipe-card', ['recipe' => $recipe])->render();
+        });
+        return response()->json($recipes);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -38,6 +46,7 @@ class RecipeController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
@@ -68,7 +77,7 @@ class RecipeController extends Controller
         //save the encoded image to the temp path
         file_put_contents($tempPath, $encodedImage);
 
-        $path = Storage::disk('spaces')->putFileAs("images/user_uploads/user_{$user->id}", new File($tempPath), $image->hashName()
+        $path = Storage::disk('spaces')->putFileAs("images/user_uploads/user_{$user->id}/food_images", new File($tempPath), $image->hashName()
             . '.jpg', 'public');
 
         $imageUrl = Storage::disk('spaces')->url($path);
@@ -83,7 +92,7 @@ class RecipeController extends Controller
             Ingredient::firstOrCreate(['name' => $ingredient]);
         }
 
-        $request->user()->recipes()->create([
+       $recipe =  $request->user()->recipes()->create([
             'title' => $validated['title'],
             'description' => $validated['description'],
             'instruction' => $validated['instruction'],
@@ -91,6 +100,8 @@ class RecipeController extends Controller
             'disease_name' => $validated['disease_name'],
             'image_url' => $imageUrl ?? null,
         ]);
+
+        RecipeCreated::dispatch($recipe);
         return redirect()->route('home');
     }
 
@@ -118,6 +129,28 @@ class RecipeController extends Controller
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false], 400);
+    }
+
+    public function loadMore(Request $request) {
+        $page = $request->input('page', 1);
+        $recipes = Recipe::orderBy('created_at', 'desc')->paginate(10, ['*'], 'page', $page);
+
+        $html = view('partials.recipe-cards', compact('recipes'))->render();
+        return response()->json(['html' => $html]);
+    }
+
+    public function checkNew(Request $request){
+        $lastRecipeId = $request->input('last_recipe_id');
+        $newRecipes = Recipe::where('id', '>', $lastRecipeId)->orderBy('created_at', 'desc')->get();
+
+        if($newRecipes->isNotEmpty()) {
+            return response()->json([
+                'new_recipes' => true,
+                'recipes' => $newRecipes,
+                'last_recipe_id' => $newRecipes->last()->id
+            ]);
+        }
+        return response()->json(['new_recipes' => false]);
     }
     /**
      * Show the form for editing the specified resource.

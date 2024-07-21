@@ -25,7 +25,7 @@
                     </div>
                     <ul id="categories" class="flex flex-wrap justify-evenly max-sm:flex-col text-center">
                         @foreach($categories as $category)
-                            <li class="category bg-yellow-500 mb-2 font-medium p-3 rounded-2xl shadow dark:shadow-yellow-500"
+                            <li class="category bg-orange-400 mb-2 font-medium p-3 rounded-2xl shadow dark:shadow-yellow-500"
                                 data-category-id="{{ $category->id }}">
                                 <a data-category-id="{{ $category->id }}"
                                    href="{{ route('category.show', $category->id) }}">{{ $category->title }}</a>

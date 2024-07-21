@@ -16,6 +16,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/upload', [ProfileController::class, 'uploadProfileImage'])->name('profile.upload');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
@@ -30,12 +31,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/recipe/{id}', [RecipeController::class, 'show'])->name('recipe.show');
     Route::get('/recipe', [RecipeController::class, 'index'])->name('recipe');
     Route::post('/recipe', [RecipeController::class, 'store'])->name('recipe.store');
+    Route::get('/recipe/latest', [RecipeController::class, 'latest'])->name('recipe.latest');
+
 
     //Category
     Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
     Route::post('/category/remove-recipe', [RecipeController::class, 'removeFromCategory'])->name('category.remove-recipe');
     Route::post('/category/delete', [CategoryController::class, 'delete'])->name('category.delete');
     Route::post('/category/rename', [CategoryController::class, 'rename'])->name('category.rename');
+
+
 //    recipe book route
     Route::get('/recipebook', [RecipeBookController::class, 'index'])->name('recipebook.index'); //
     Route::get('/recipebook/{id}', [RecipeBookController::class, 'show'])->name('recipebook.show');
@@ -47,8 +52,9 @@ Route::middleware('auth')->group(function () {
 //    bookmarking route
     Route::post('/recipes/{id}/toggle-bookmark',[RecipeBookController::class, 'toggleBookmark'])->name('recipes.toggleBookmark');
 
-
-
+//// load more route
+//    Route::get('/recipes/loadMore', [RecipeController::class, 'loadMore'])->name('recipes.loadMore');
+//    Route::get('/recipes/check-new', [RecipeController::class, 'checkNew'])->name('recipes.checkNew');
 });
 
 require __DIR__.'/auth.php';

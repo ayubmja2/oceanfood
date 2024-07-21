@@ -45,45 +45,43 @@
             </div>
         </x-panel>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function(){
-            const ellipsisIcon = document.getElementById('ellipsis-icon');
-            const dropdownMenu = document.getElementById('dropdown-menu');
-            const deleteFromCategory = document.getElementById('delete-from-category');
-
-            if (ellipsisIcon) {
-                ellipsisIcon.addEventListener('click', function() {
-                    dropdownMenu.classList.toggle('hidden');
-                });
-
-                deleteFromCategory.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    dropdownMenu.classList.toggle('hidden');
-
-                    //Ajax call to delete
-                    $.ajax({
-                        url: '{{route('category.remove-recipe')}}',
-                        type: 'POST',
-                        data: {
-                            recipe_id: '{{$recipe->id}}',
-                            _token: '{{csrf_token()}}'
-                        },
-                        success: function(response) {
-                            if(response.success){
-                                window.location.href = '{{ route("recipebook.index") }}';
-                                // location.reload();
-                            }else {
-                                alert('Failed to remove recipe from collection')
-                            }
-                        },
-                        error: function(response) {
-                            alert('Error occurred while removing recipe from category');
-                        }
-                    });
-                });
-            }
-        });
-    </script>
 </x-app-layout>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function(){
+        const ellipsisIcon = document.getElementById('ellipsis-icon');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        const deleteFromCategory = document.getElementById('delete-from-category');
+
+        if (ellipsisIcon) {
+            ellipsisIcon.addEventListener('click', function() {
+                dropdownMenu.classList.toggle('hidden');
+            });
+
+            deleteFromCategory.addEventListener('click', function(event) {
+                event.preventDefault();
+                dropdownMenu.classList.toggle('hidden');
+
+                //Ajax call to delete
+                $.ajax({
+                    url: '{{route('category.remove-recipe')}}',
+                    type: 'POST',
+                    data: {
+                        recipe_id: '{{$recipe->id}}',
+                        _token: '{{csrf_token()}}'
+                    },
+                    success: function(response) {
+                        if(response.success){
+                            window.location.href = '{{ route("recipebook.index") }}';
+                            // location.reload();
+                        }else {
+                            alert('Failed to remove recipe from collection')
+                        }
+                    },
+                    error: function(response) {
+                        alert('Error occurred while removing recipe from category');
+                    }
+                });
+            });
+        }
+    });
+</script>

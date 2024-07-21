@@ -41,9 +41,6 @@
 
     </x-panel>
 </div>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
-
 <script type="text/javascript">
     $(document).ready(function() {
         $('.bookmark-btn').off('click').on('click', function() {
