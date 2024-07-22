@@ -1,5 +1,4 @@
 import './bootstrap';
-import './echo.js'
 
 import Alpine from 'alpinejs';
 

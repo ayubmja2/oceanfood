@@ -10,7 +10,7 @@
                         </div>
 
                         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                            <form class="space-y-6" action="{{route('recipe.store')}}" method="POST" enctype="multipart/form-data">
+                            <form class="space-y-6" action="{{route('recipe.store')}}" method="POST" enctype="multipart/form-data" id="recipe-form">
                                 @csrf
                                 {{-- Recipe Name --}}
                                 <div>
@@ -73,9 +73,10 @@
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+@vite('resources/js/post-form.js')
+

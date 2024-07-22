@@ -10,6 +10,7 @@ use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -92,7 +93,7 @@ class RecipeController extends Controller
             Ingredient::firstOrCreate(['name' => $ingredient]);
         }
 
-       $recipe =  $request->user()->recipes()->create([
+       $recipe = $request->user()->recipes()->create([
             'title' => $validated['title'],
             'description' => $validated['description'],
             'instruction' => $validated['instruction'],
@@ -102,7 +103,9 @@ class RecipeController extends Controller
         ]);
 
         RecipeCreated::dispatch($recipe);
-        return redirect()->route('home');
+//        Log::info('Recipe created event fired', ['recipe'=> $recipe]);
+
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -173,6 +176,7 @@ class RecipeController extends Controller
         foreach($recipes as $recipe){
             $html .= view('components.recipe-card',compact('recipe'))->render();
         }
+
 
         return response()->json(['html' => $html], 200);
     }

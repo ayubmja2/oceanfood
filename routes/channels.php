@@ -1,7 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Broadcast;
+    use App\Models\User;
+    use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\Broadcast;
+    use Illuminate\Support\Facades\Log;
 
-Broadcast::channel('recipes', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+    Broadcast::channel('recipe', function (User $user) {
+
 });

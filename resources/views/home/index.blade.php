@@ -7,6 +7,9 @@
 
         <!-- Main Content Area -->
         <div class="w-1/2 h-full overflow-y-auto no-scrollbar p-4 pb-16" id="main-content">
+            <div id="notification-button" class="hidden p-2 bg-blue-500 text-white rounded-full" data-count="0">
+                You have (0) new posts
+            </div>
             <div id="recipe-cards">
                 @foreach($recipes as $recipe)
                     <x-recipe-card :recipe="$recipe" />
@@ -24,8 +27,10 @@
         </div>
     </div>
 </x-app-layout>
-<script type="text/javascript">
+@vite('resources/js/echo-subscription.js')
+<script type="module">
     $(document).ready(function() {
+
         $('#search-form').on('submit', function(event) {
             event.preventDefault();
             let keyword = $('#search-keyword').val();
