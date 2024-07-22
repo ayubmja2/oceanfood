@@ -5,6 +5,7 @@
     use Illuminate\Support\Facades\Broadcast;
     use Illuminate\Support\Facades\Log;
 
-    Broadcast::channel('recipe', function (User $user) {
-
+    Broadcast::channel('recipe', function () {
+        return Auth::check();
 });
+

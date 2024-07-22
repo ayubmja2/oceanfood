@@ -1,4 +1,5 @@
 <x-app-layout>
+    <meta id="new-recipes-url" content="{{ route('recipe.new') }}">
     <div class="h-screen flex mt-2">
         <!-- Left Sidebar -->
         <div class="w-1/4 h-screen sticky top-0">

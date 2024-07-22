@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/recipe/latest', [RecipeController::class, 'latest'])->name('recipe.latest');
     Route::get('/recipes/search', [RecipeController::class, 'search'])->name('recipe.search');
 
+    Route::get('/recipes/new', [RecipeController::class, 'fetchNewRecipes'])->name('recipe.new');
     //Category
     Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
     Route::post('/category/remove-recipe', [RecipeController::class, 'removeFromCategory'])->name('category.remove-recipe');

@@ -180,6 +180,15 @@ class RecipeController extends Controller
 
         return response()->json(['html' => $html], 200);
     }
+
+    public function fetchNewRecipes(Request $request)
+    {
+        $latestRecipeId = $request->input('latest_recipe_id', 0);
+        $newRecipes = Recipe::where('id', '>', $latestRecipeId)->orderBy('created_at', 'desc')->get();
+
+        return response()->json($newRecipes);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
