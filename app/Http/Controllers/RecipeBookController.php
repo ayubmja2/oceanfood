@@ -15,13 +15,14 @@ class RecipeBookController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $recipes = $user->recipes;
         $categories = $user->categories;
         $bookmarkedRecipes = $user->bookmarkedRecipes()->with('user')->get();
 
         $uncategorizedRecipes = $user->bookmarkedRecipes()->whereDoesntHave('categories', function ($query) use ($user) {
             $query->where('category_recipe.user_id', $user->id);
         })->get();
-        return view('recipebook.index', compact('categories','bookmarkedRecipes', 'uncategorizedRecipes'));
+        return view('recipebook.index', compact('recipes','categories','bookmarkedRecipes', 'uncategorizedRecipes'));
     }
 
     /**

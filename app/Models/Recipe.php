@@ -9,16 +9,16 @@ class Recipe extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'ingredients' => 'array',
-    ];
 
-    protected $fillable = ['user_id', 'title', 'description', 'instruction', 'ingredients', 'image_url', 'disease_name'];
+    protected $fillable = ['user_id', 'title', 'description', 'instruction', 'image_url', 'disease_name'];
 
     public function user(){
         return $this->belongsTo(User::class);
     }
 
+    public function ingredients(){
+        return $this->belongsToMany(Ingredient::class, 'ingredient_recipe')->withPivot('quantity', 'unit');
+    }
     public function categories(){
         return $this->belongsToMany(Category::class, 'category_recipe')->withPivot('user_id')->withTimestamps();
     }

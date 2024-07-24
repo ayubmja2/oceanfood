@@ -27,7 +27,7 @@
                                         <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
                                     </div>
                                     <div class="mt-2">
-                                        <input id="description" name="description" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Amazing food from... Just be descriptive about the dish">
+                                        <textarea id="description" name="description" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Amazing food from... Just be descriptive about the dish"></textarea>
                                     </div>
                                 </div>
                                 {{-- Instructions --}}
@@ -36,18 +36,23 @@
                                         <label for="instruction" class="block text-sm font-medium leading-6 text-gray-900">Instructions</label>
                                     </div>
                                     <div class="mt-2">
-                                        <input id="instruction" name="instruction" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Cook rice for 4-6min. Cook chicken in oven until cooked">
+                                        <textarea id="instruction" name="instruction" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Cook rice for 4-6min. Cook chicken in oven until cooked"></textarea>
                                     </div>
                                 </div>
                                 {{-- Ingredients --}}
-                                <div>
+                                <div id="ingredients-container">
                                     <div class="flex items-center justify-between">
                                         <label for="ingredients" class="block text-sm font-medium leading-6 text-gray-900">Ingredients</label>
                                     </div>
                                     <div class="mt-2">
-                                        <input id="ingredients" name="ingredients" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Rice, Chicken">
+{{--                                        <input id="ingredients" name="ingredients" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Rice, Chicken">--}}
+
+                                        <input type="text" name="ingredients[0][name]" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Ingredient">
+                                        <input type="text" name="ingredients[0][quantity]" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Quantity">
+                                        <input type="text" name="ingredients[0][unit]" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Unit (e.g, grams, cups)">
                                     </div>
                                 </div>
+                                <button type="button" id="add-ingredient" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Add Ingredient</button>
                                 {{-- img --}}
                                 <div>
                                     <div class="flex items-center justify-between">

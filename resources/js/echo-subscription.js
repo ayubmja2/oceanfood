@@ -1,27 +1,28 @@
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOMContentLoaded');
 
-    window.Echo.private('recipe')
-        .listen('RecipeCreated', (e) => {
-            console.log('New recipe created:', e.recipe);
+   if(window.Echo) {
+       window.Echo.private('recipe')
+           .listen('RecipeCreated', (e) => {
+               console.log('New recipe created:', e.recipe);
 
-            // Show the notification button
-            const notificationButton = document.getElementById('notification-button');
-            if (notificationButton) {
-                let count = parseInt(notificationButton.getAttribute('data-count')) || 0;
-                count++;
-                notificationButton.setAttribute('data-count', count);
-                notificationButton.textContent = `You have (${count}) new post${count > 1 ? 's' : ''}`;
-                notificationButton.classList.remove('hidden');
-                console.log('Notification button updated');
-            } else {
-                console.log('Notification button not found');
-            }
-        });
+               // Show the notification button
+               const notificationButton = document.getElementById('notification-button');
+               if (notificationButton) {
+                   let count = parseInt(notificationButton.getAttribute('data-count')) || 0;
+                   count++;
+                   notificationButton.setAttribute('data-count', count);
+                   notificationButton.textContent = `You have (${count}) new post${count > 1 ? 's' : ''}`;
+                   notificationButton.classList.remove('hidden');
+                   console.log('Notification button updated');
+               } else {
+                   console.log('Notification button not found');
+               }
+           });
 
-    document.getElementById('notification-button').addEventListener('click', function () {
-        location.reload()
-    });
+       document.getElementById('notification-button').addEventListener('click', function () {
+           location.reload()
+       });
+   }
 });
 
 function fetchNewRecipes() {

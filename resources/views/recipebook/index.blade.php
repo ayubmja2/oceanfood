@@ -40,9 +40,8 @@
                     <div class="text-center mb-4">
                         <h1>New BookMarks</h1>
                     </div>
-
                     <div class="container mx-auto">
-                        <div class="h-80 overflow-y-scroll">
+                        <div class="h-80 overflow-y-scroll hide-scrollbar">
                             <ul id="uncategorized-recipes" class="flex flex-col space-y-2">
                                 @foreach($uncategorizedRecipes as $recipe)
                                     <li class="recipe" data-recipe-id="{{ $recipe->id }}" draggable="true">
@@ -56,14 +55,41 @@
 
                 </div>
             </x-panel>
+           <div class="container mx-auto col-span-2">
+               <x-panel>
+                   <div class="text-center text-md mb-3">
+                       <h1>My Recipes</h1>
+                   </div>
+                   <div class="container mx-auto">
+                       <div class="h-80 overflow-x-auto hide-scrollbar">
+                           <ul class="flex">
+                               @foreach($recipes as $recipe)
+                                   <li class="flex-shrink-0 w-1/2">
+                                       <x-recipe-card :$recipe/>
+                                   </li>
+                               @endforeach
+                           </ul>
+                       </div>
+                   </div>
+               </x-panel>
+           </div>
         </div>
-    </div>
 
+    </div>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar{
+            display:none;
+        }
+        .hide-scrollbar{
+            -ms-overflow-style:none;
+            scrollbar-width:none;
+        }
+    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const categories = document.querySelectorAll('.category');
             const recipes = document.querySelectorAll('.recipe');
-
+            const horizontalScrollContainers = document.querySelectorAll('.overflow-x-auto');
             recipes.forEach(recipe => {
                 recipe.addEventListener('dragstart', function (e) {
                     console.log('Drag Start:', e.target.dataset.recipeId);
@@ -104,6 +130,14 @@
                         });
                 });
             });
+            horizontalScrollContainers.forEach(container => {
+                container.addEventListener('wheel', function(e) {
+                    if(e.deltaY !==0 ){
+                        e.preventDefault();
+                        container.scrollLeft += e.deltaY;
+                    }
+                });
+            })
         });
     </script>
 </x-app-layout>

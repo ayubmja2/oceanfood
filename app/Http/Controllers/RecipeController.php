@@ -9,6 +9,7 @@ use App\Models\Recipe;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -21,9 +22,15 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        $recipes = Recipe::orderBy('created_at', 'desc')->get();
+
+        $recipes = Cache::remember('recipes_page_' . request('page', 1), 60, function () {
+           return  Recipe::with('user')->orderBy('created_at', 'desc')->paginate(10);
+        });
         $user = Auth::user();
-        $collections = $user->categories;
+
+        $collections = Cache::remember('user_categories_' . $user->id, 60, function () use ($user){
+            return $user->categories;
+        });
         return view('home.index', compact('recipes', 'collections'));
     }
 
@@ -52,7 +59,10 @@ class RecipeController extends Controller
             'title' => 'required|string',
             'description' => 'required|string',
             'instruction' => 'required|string',
-            'ingredients' => 'required|string',
+            'ingredients' => 'required|array',
+            'ingredients.*.name' => 'required|string',
+            'ingredients.*.quantity' => 'required|string',
+            'ingredients.*.unit' => 'required|string',
             'disease_name' => 'required|string',
             'image' => 'required|image|max:10240',
         ]);
@@ -61,49 +71,64 @@ class RecipeController extends Controller
         if ($request->hasFile('image')) {
             $user = $request->user();
             $image = $request->file('image');
+
+            // Initialize ImageManager with the driver
+            $manager = new ImageManager(new Driver());
+
+            // Resize the image
+            $resizedImage = $manager->read($image->getPathname())->resize(200, 200);
+
+            //Encode the image
+            $encodedImage = $resizedImage->toJpg(75);
+
+            //create temporary file path
+            $tempPath = sys_get_temp_dir() . '/' . $image->hashName() . '.jpg';
+
+            //save the encoded image to the temp path
+            file_put_contents($tempPath, $encodedImage);
+
+            $path = Storage::disk('spaces')->putFileAs("images/user_uploads/user_{$user->id}/food_images", new File($tempPath), $image->hashName()
+                . '.jpg', 'public');
+
+            $imageUrl = Storage::disk('spaces')->url($path);
+
+            // Delete the temporary file
+            unlink($tempPath);
+
         }
 
-        // Initialize ImageManager with the driver
-        $manager = new ImageManager(new Driver());
-
-        // Resize the image
-        $resizedImage = $manager->read($image->getPathname())->resize(200, 200);
-
-        //Encode the image
-        $encodedImage = $resizedImage->toJpg(75);
-
-        //create temporary file path
-        $tempPath = sys_get_temp_dir() . '/' . $image->hashName() . '.jpg';
-
-        //save the encoded image to the temp path
-        file_put_contents($tempPath, $encodedImage);
-
-        $path = Storage::disk('spaces')->putFileAs("images/user_uploads/user_{$user->id}/food_images", new File($tempPath), $image->hashName()
-            . '.jpg', 'public');
-
-        $imageUrl = Storage::disk('spaces')->url($path);
-
-        // Delete the temporary file
-        unlink($tempPath);
-
-        // Ensure ingredients are stored in the ingredient table
-        $ingredients = array_map('trim', explode(',', $request->input('ingredients')));
-
-        foreach ($ingredients as $ingredient) {
-            Ingredient::firstOrCreate(['name' => $ingredient]);
-        }
 
        $recipe = $request->user()->recipes()->create([
             'title' => $validated['title'],
             'description' => $validated['description'],
             'instruction' => $validated['instruction'],
-            'ingredients' => $ingredients, // save ingredients as json array
             'disease_name' => $validated['disease_name'],
             'image_url' => $imageUrl ?? null,
         ]);
 
+        // Attach ingredients to the recipe
+
+        foreach ($validated['ingredients'] as $ingredientData) {
+            $ingredient = Ingredient::firstOrCreate(['name' => $ingredientData['name']]);
+
+            // Convert fraction to decimal
+            $quantity = $ingredientData['quantity'];
+            if (strpos($quantity, '/') !== false) {
+                $parts = explode('/', $quantity);
+                if (count($parts) == 2) {
+                    $quantity = floatval($parts[0]) / floatval($parts[1]);
+                }
+            } else {
+                $quantity = floatval($quantity);
+            }
+
+            $recipe->ingredients()->attach($ingredient->id, [
+                'quantity' => $quantity,
+                'unit' => $ingredientData['unit']
+            ]);
+        }
+
         RecipeCreated::dispatch($recipe);
-//        Log::info('Recipe created event fired', ['recipe'=> $recipe]);
 
         return response()->json(['success' => true]);
     }
@@ -113,13 +138,13 @@ class RecipeController extends Controller
      */
     public function show($recipeId)
     {
-        $recipe = Recipe::with('user')->findOrFail($recipeId);
+        $recipe = Recipe::with('ingredients')->findOrFail($recipeId);
+
         $userId = Auth::id();
         $isInCategory = DB::table('category_recipe')->where('recipe_id', $recipeId)->where('user_id', $userId)->exists();
 
         $user = Auth::user();
         $userAllergens = $user->allergens ?? [];
-//        dd($userAllergens);
         return view('recipe.show', compact('recipe', 'isInCategory', 'userAllergens'));
     }
 
@@ -165,7 +190,7 @@ class RecipeController extends Controller
 
         $recipes = Recipe::when($keyword, function ($query, $keyword) {
             return $query->where('title', 'LIKE', '%' . $keyword . '%');
-        })->get();
+        })->orderBy('created_at', 'desc')->paginate(5);
 
         if($recipes->isEmpty()){
             return response()->json(['error' => 'No recipes found.'], 404);
@@ -192,17 +217,92 @@ class RecipeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($recipeId)
     {
-        //
+        $recipe = Recipe::findOrFail($recipeId);
+        if ($recipe->user_id !== Auth::id()){
+            abort(403, 'Unauthorized action.');
+        }
+        return view('recipe.edit', compact('recipe'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $recipeId)
     {
-        //
+        $recipe = Recipe::findOrFail($recipeId);
+
+        if ($recipe->user_id !== Auth::id()){
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'instruction' => 'required|string',
+            'ingredients' => 'required|array',
+            'ingredients.*.name' => 'required|string',
+            'ingredients.*.quantity' => 'required|string',
+            'ingredients.*.unit' => 'required|string',
+            'disease_name' => 'required|string',
+            'image' => 'sometimes|image|max:10240',
+        ]);
+
+
+        if ($request->hasFile('image')){
+            //Delete old image if it exists
+            if($recipe->image_url){
+                $oldPath = str_replace(Storage::disk('spaces')->url("images/user_uploads/user_{$recipe->user_id}/food_images"), "images/user_uploads/user_{$recipe->user_id}/food_images", $recipe->image_url);
+                Storage::disk('spaces')->delete($oldPath);
+            }
+
+            $image = $request->file('image');
+            $manager = new ImageManager(new Driver());
+            $resizedImage = $manager->read($image->getPathname())->resize(200, 200);
+            $encodedImage = $resizedImage->toJpg(75);
+            $tempPath = sys_get_temp_dir() . '/' . $image->hashName() . '.jpg';
+            file_put_contents($tempPath, $encodedImage);
+
+            $path = Storage::disk('spaces')->putFileAs("images/user_uploads/user_{$recipe->user_id}/food_images", new File($tempPath), $image->hashName() . '.jpg', 'public');
+            $imagesUrl = Storage::disk('spaces')->url($path);
+            unlink($tempPath);
+
+            $recipe->image_url = $imagesUrl;
+        }
+
+        // Update recipe fields
+        $recipe->title = $validated['title'];
+        $recipe->description = $validated['description'];
+        $recipe->instruction = $validated['instruction'];
+        $recipe->disease_name = $validated['disease_name'];
+        $recipe->save();
+
+      // Detach old ingredients
+        $recipe->ingredients()->detach();
+
+        // Attach new ingredients
+        foreach($validated['ingredients'] as $ingredientData) {
+            $ingredient = Ingredient::firstOrCreate(['name' => $ingredientData['name']]);
+
+            // Convert fraction to decimal
+            $quantity = $ingredientData['quantity'];
+            if(strpos($quantity, '/') !== false) {
+                $parts = explode('/', $quantity);
+                if(count($parts) == 2) {
+                    $quantity = floatval($parts[0]) / floatval($parts[1]);
+                }
+            }else {
+                $quantity = floatval($quantity);
+            }
+
+            $recipe->ingredients()->attach($ingredient->id, [
+                'quantity' => $quantity,
+                'unit' => $ingredientData['unit']
+            ]);
+        }
+
+        return redirect()->route('recipe.show', $recipe->id);
     }
 
     /**

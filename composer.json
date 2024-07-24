@@ -8,6 +8,7 @@
         "php": "^8.2",
         "intervention/image": "^3.7",
         "laravel/framework": "^11.9",
+        "laravel/telescope": "^5.1",
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "^3.28",
         "pusher/pusher-php-server": "^7.2"

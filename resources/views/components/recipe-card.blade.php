@@ -41,13 +41,12 @@
 
     </x-panel>
 </div>
-<script type="text/javascript">
+<script type="module">
     $(document).ready(function() {
         $('.bookmark-btn').off('click').on('click', function() {
             let recipeId = $(this).data('recipe-id');
             let button = $(this).find('.bookmark-icon');
             let buttonHtml = $(this).html();
-
 
             // Immediate visual feedback
             if (button.hasClass('far')) {
@@ -69,6 +68,12 @@
                         $(this).html('<i class="fas fa-bookmark bookmark-icon" style="color: black;"></i>');
                     } else {
                         $(this).html('<i class="far fa-bookmark bookmark-icon"></i>');
+                        location.reload()
+                        // remove recipe from bookmark
+                        // const recipeElement = document.querySelector(`.recipe[data-recipe-id="${recipeId}"]`);
+                        // if(recipeElement) {
+                        //     recipeElement.remove();
+                        // }
                     }
 
                     let recipeItem = $(this).closest('.recipe');
