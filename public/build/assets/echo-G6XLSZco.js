@@ -1,1 +1,0 @@
-import{P as c,E as r}from"./pusher-BLwKsXut.js";window.Pusher=c;window.Echo=new r({broadcaster:"pusher",key:"ff7076dd987cc8b3c788",cluster:"us2",forceTLS:!0});window.Echo.channel("recipes").listen("RecipeCreated",e=>{console.log("New recipe created:",e.recipe),fetchNewRecipe()});
