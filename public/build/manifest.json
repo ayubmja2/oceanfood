@@ -17,6 +17,12 @@
       "_pusher-BLwKsXut.js"
     ]
   },
+  "resources/js/echo-subscription.js": {
+    "file": "assets/echo-subscription-BDg9GatD.js",
+    "name": "echo-subscription",
+    "src": "resources/js/echo-subscription.js",
+    "isEntry": true
+  },
   "resources/js/echo.js": {
     "file": "assets/echo-vmuADTRR.js",
     "name": "echo",
@@ -25,5 +31,11 @@
     "imports": [
       "_pusher-BLwKsXut.js"
     ]
+  },
+  "resources/js/post-form.js": {
+    "file": "assets/post-form-eUS1fTIy.js",
+    "name": "post-form",
+    "src": "resources/js/post-form.js",
+    "isEntry": true
   }
 }
